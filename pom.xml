@@ -75,6 +75,12 @@
             <version>${scx-common.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-http-proxy</artifactId>
+            <version>${vertx-http-proxy.version}</version>
+        </dependency>
+
         <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>
@@ -90,6 +96,7 @@
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <scx-common.version>2.6.3</scx-common.version>
+        <vertx-http-proxy.version>4.5.1</vertx-http-proxy.version>
         <testng.version>7.9.0</testng.version>
 
     </properties>
