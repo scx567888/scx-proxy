@@ -89,7 +89,7 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <scx-common.version>2.6.3</scx-common.version>
+        <scx-common.version>2.7.0</scx-common.version>
         <testng.version>7.9.0</testng.version>
 
     </properties>
