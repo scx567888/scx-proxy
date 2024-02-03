@@ -72,7 +72,19 @@
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-common</artifactId>
-            <version>${scx-common.version}</version>
+            <version>${scx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-logging</artifactId>
+            <version>${scx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
@@ -89,7 +101,8 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <scx-common.version>2.6.3</scx-common.version>
+        <scx.version>2.7.0</scx.version>
+        <slf4j.version>2.0.11</slf4j.version>
         <testng.version>7.9.0</testng.version>
 
     </properties>
