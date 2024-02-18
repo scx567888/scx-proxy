@@ -37,17 +37,21 @@ public final class WindowsProxyHelper {
         );
     }
 
-    public static Boolean getProxyEnable() {
+    public static Boolean getProxyEnableOrNull() {
         try {
-            var value = registryGetIntValue(
-                    HKEY_CURRENT_USER,
-                    INTERNET_SETTINGS_KEY_PATH,
-                    PROXY_ENABLE
-            );
-            return value == 1;
+            return getProxyEnable();
         } catch (Win32Exception e) {
             return null;
         }
+    }
+
+    public static Boolean getProxyEnable() {
+        var value = registryGetIntValue(
+                HKEY_CURRENT_USER,
+                INTERNET_SETTINGS_KEY_PATH,
+                PROXY_ENABLE
+        );
+        return value == 1;
     }
 
     public static void setProxyEnabled(boolean enable) {
@@ -73,16 +77,20 @@ public final class WindowsProxyHelper {
         setProxyEnabled(false);
     }
 
-    public static String getProxyServer() {
+    public static String getProxyServerOrNull() {
         try {
-            return registryGetStringValue(
-                    HKEY_CURRENT_USER,
-                    INTERNET_SETTINGS_KEY_PATH,
-                    PROXY_SERVER
-            );
+            return getProxyServer();
         } catch (Win32Exception e) {
             return null;
         }
+    }
+
+    public static String getProxyServer() {
+        return registryGetStringValue(
+                HKEY_CURRENT_USER,
+                INTERNET_SETTINGS_KEY_PATH,
+                PROXY_SERVER
+        );
     }
 
     /**
@@ -115,17 +123,21 @@ public final class WindowsProxyHelper {
         setProxyServer("");
     }
 
-    public static String[] getProxyOverride() {
+    public static String[] getProxyOverrideOrNull() {
         try {
-            var value = registryGetStringValue(
-                    HKEY_CURRENT_USER,
-                    INTERNET_SETTINGS_KEY_PATH,
-                    PROXY_OVERRIDE
-            );
-            return value.split(";");
+            return getProxyOverride();
         } catch (Win32Exception e) {
             return null;
         }
+    }
+
+    public static String[] getProxyOverride() {
+        var value = registryGetStringValue(
+                HKEY_CURRENT_USER,
+                INTERNET_SETTINGS_KEY_PATH,
+                PROXY_OVERRIDE
+        );
+        return value.split(";");
     }
 
     /**
@@ -149,6 +161,10 @@ public final class WindowsProxyHelper {
 
     public static ProxyInfo getProxyInfo() {
         return new ProxyInfo(getProxyServer(), getProxyEnable(), getProxyOverride());
+    }
+
+    public static ProxyInfo getProxyInfoOrNull() {
+        return new ProxyInfo(getProxyServerOrNull(), getProxyEnableOrNull(), getProxyOverrideOrNull());
     }
 
     public static void setProxy(ProxyInfo proxyInfo) {

@@ -21,7 +21,7 @@ public class WindowsProxyHelperTest {
         });
         
         //获取旧的代理设置
-        var oldProxyInfo = WindowsProxyHelper.getProxyInfo();
+        var oldProxyInfo = WindowsProxyHelper.getProxyInfoOrNull();
 
         //设置自己的 代理
         WindowsProxyHelper.setProxyServer(8080);
