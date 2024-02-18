@@ -19,7 +19,7 @@ public class WindowsProxyHelperTest {
         WindowsProxyHelper.getInternetSettingsValues().forEach((k, v) -> {
             System.out.println(k + " : " + v);
         });
-        
+
         //获取旧的代理设置
         var oldProxyInfo = WindowsProxyHelper.getProxyInfoOrNull();
 
@@ -37,7 +37,7 @@ public class WindowsProxyHelperTest {
         WindowsProxyHelper.getInternetSettingsValues().forEach((k, v) -> {
             System.out.println(k + " : " + v);
         });
-        
+
     }
 
 }
