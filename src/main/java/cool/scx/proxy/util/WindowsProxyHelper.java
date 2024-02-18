@@ -1,9 +1,8 @@
 package cool.scx.proxy.util;
 
-import com.sun.jna.platform.win32.Advapi32Util;
-
 import java.util.Map;
 
+import static com.sun.jna.platform.win32.Advapi32Util.*;
 import static com.sun.jna.platform.win32.WinReg.HKEY_CURRENT_USER;
 
 /**
@@ -30,14 +29,14 @@ public final class WindowsProxyHelper {
      * @return 代理配置信息
      */
     public static Map<String, Object> getInternetSettingsValues() {
-        return Advapi32Util.registryGetValues(
+        return registryGetValues(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH
         );
     }
 
     public static boolean getProxyEnable() {
-        var value = Advapi32Util.registryGetIntValue(
+        var value = registryGetIntValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_ENABLE
@@ -46,7 +45,7 @@ public final class WindowsProxyHelper {
     }
 
     public static void setProxyEnabled(boolean enable) {
-        Advapi32Util.registrySetIntValue(
+        registrySetIntValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_ENABLE,
@@ -69,7 +68,7 @@ public final class WindowsProxyHelper {
     }
 
     public static String getProxyServer() {
-        return Advapi32Util.registryGetStringValue(
+        return registryGetStringValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_SERVER
@@ -91,7 +90,7 @@ public final class WindowsProxyHelper {
      * @param host 主机
      */
     public static void setProxyServer(String host) {
-        Advapi32Util.registrySetStringValue(
+        registrySetStringValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_SERVER,
@@ -107,7 +106,7 @@ public final class WindowsProxyHelper {
     }
 
     public static String[] getProxyOverride() {
-        var value = Advapi32Util.registryGetStringValue(
+        var value = registryGetStringValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_OVERRIDE
@@ -119,7 +118,7 @@ public final class WindowsProxyHelper {
      * 设置绕过代理的 主机 列表
      */
     public static void setProxyOverride(String... list) {
-        Advapi32Util.registrySetStringValue(
+        registrySetStringValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_OVERRIDE,
