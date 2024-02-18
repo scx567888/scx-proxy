@@ -3,7 +3,10 @@ on: [ push, pull_request ]
 jobs:
   build-and-test:
     name: 构建和测试
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
 
       - name: 签出代码
@@ -22,5 +25,5 @@ jobs:
       - name: 上传 构建和测试 生成的文件
         uses: actions/upload-artifact@v4
         with:
-          name: scx-proxy-artifact
+          name: scx-proxy-artifact-${{ runner.os }}
           path: ./target/

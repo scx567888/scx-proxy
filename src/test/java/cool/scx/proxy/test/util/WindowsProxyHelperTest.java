@@ -11,6 +11,10 @@ public class WindowsProxyHelperTest {
 
     @Test
     public static void test1() {
+        //跳过 linux 上的测试
+        if (!WindowsProxyHelper.isWindows()) {
+            return;
+        }
         //获取旧的代理设置
         var oldProxyInfo = WindowsProxyHelper.getProxyInfo();
 

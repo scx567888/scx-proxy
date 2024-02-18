@@ -150,6 +150,11 @@ public final class WindowsProxyHelper {
         }
     }
 
+    public static boolean isWindows() {
+        var currentOS = System.getProperty("os.name");
+        return currentOS.startsWith("Windows");
+    }
+
     public record ProxyInfo(String proxyServer, Boolean proxyEnable, String[] proxyOverride) {
 
     }
