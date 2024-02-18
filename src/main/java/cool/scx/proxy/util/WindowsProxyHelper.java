@@ -1,5 +1,7 @@
 package cool.scx.proxy.util;
 
+import com.sun.jna.platform.win32.Win32Exception;
+
 import java.util.Map;
 
 import static com.sun.jna.platform.win32.Advapi32Util.*;
@@ -35,13 +37,17 @@ public final class WindowsProxyHelper {
         );
     }
 
-    public static boolean getProxyEnable() {
-        var value = registryGetIntValue(
-                HKEY_CURRENT_USER,
-                INTERNET_SETTINGS_KEY_PATH,
-                PROXY_ENABLE
-        );
-        return value == 1;
+    public static Boolean getProxyEnable() {
+        try {
+            var value = registryGetIntValue(
+                    HKEY_CURRENT_USER,
+                    INTERNET_SETTINGS_KEY_PATH,
+                    PROXY_ENABLE
+            );
+            return value == 1;
+        } catch (Win32Exception e) {
+            return null;
+        }
     }
 
     public static void setProxyEnabled(boolean enable) {
@@ -68,11 +74,15 @@ public final class WindowsProxyHelper {
     }
 
     public static String getProxyServer() {
-        return registryGetStringValue(
-                HKEY_CURRENT_USER,
-                INTERNET_SETTINGS_KEY_PATH,
-                PROXY_SERVER
-        );
+        try {
+            return registryGetStringValue(
+                    HKEY_CURRENT_USER,
+                    INTERNET_SETTINGS_KEY_PATH,
+                    PROXY_SERVER
+            );
+        } catch (Win32Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -106,12 +116,16 @@ public final class WindowsProxyHelper {
     }
 
     public static String[] getProxyOverride() {
-        var value = registryGetStringValue(
-                HKEY_CURRENT_USER,
-                INTERNET_SETTINGS_KEY_PATH,
-                PROXY_OVERRIDE
-        );
-        return value.split(";");
+        try {
+            var value = registryGetStringValue(
+                    HKEY_CURRENT_USER,
+                    INTERNET_SETTINGS_KEY_PATH,
+                    PROXY_OVERRIDE
+            );
+            return value.split(";");
+        } catch (Win32Exception e) {
+            return null;
+        }
     }
 
     /**
