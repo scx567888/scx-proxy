@@ -15,6 +15,11 @@ public class WindowsProxyHelperTest {
         if (!WindowsProxyHelper.isWindows()) {
             return;
         }
+
+        WindowsProxyHelper.getInternetSettingsValues().forEach((k, v) -> {
+            System.out.println(k + " : " + v);
+        });
+        
         //获取旧的代理设置
         var oldProxyInfo = WindowsProxyHelper.getProxyInfo();
 
@@ -28,6 +33,11 @@ public class WindowsProxyHelperTest {
 
         //结束时 还原为 原来的代理设置
         WindowsProxyHelper.setProxy(oldProxyInfo);
+
+        WindowsProxyHelper.getInternetSettingsValues().forEach((k, v) -> {
+            System.out.println(k + " : " + v);
+        });
+        
     }
 
 }
