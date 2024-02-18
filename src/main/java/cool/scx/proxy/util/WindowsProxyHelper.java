@@ -1,9 +1,10 @@
 package cool.scx.proxy.util;
 
-import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.Win32Exception;
 
 import java.util.Map;
 
+import static com.sun.jna.platform.win32.Advapi32Util.*;
 import static com.sun.jna.platform.win32.WinReg.HKEY_CURRENT_USER;
 
 /**
@@ -30,14 +31,22 @@ public final class WindowsProxyHelper {
      * @return 代理配置信息
      */
     public static Map<String, Object> getInternetSettingsValues() {
-        return Advapi32Util.registryGetValues(
+        return registryGetValues(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH
         );
     }
 
-    public static boolean getProxyEnable() {
-        var value = Advapi32Util.registryGetIntValue(
+    public static Boolean getProxyEnableOrNull() {
+        try {
+            return getProxyEnable();
+        } catch (Win32Exception e) {
+            return null;
+        }
+    }
+
+    public static Boolean getProxyEnable() {
+        var value = registryGetIntValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_ENABLE
@@ -46,7 +55,7 @@ public final class WindowsProxyHelper {
     }
 
     public static void setProxyEnabled(boolean enable) {
-        Advapi32Util.registrySetIntValue(
+        registrySetIntValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_ENABLE,
@@ -68,8 +77,16 @@ public final class WindowsProxyHelper {
         setProxyEnabled(false);
     }
 
+    public static String getProxyServerOrNull() {
+        try {
+            return getProxyServer();
+        } catch (Win32Exception e) {
+            return null;
+        }
+    }
+
     public static String getProxyServer() {
-        return Advapi32Util.registryGetStringValue(
+        return registryGetStringValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_SERVER
@@ -91,7 +108,7 @@ public final class WindowsProxyHelper {
      * @param host 主机
      */
     public static void setProxyServer(String host) {
-        Advapi32Util.registrySetStringValue(
+        registrySetStringValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_SERVER,
@@ -106,8 +123,16 @@ public final class WindowsProxyHelper {
         setProxyServer("");
     }
 
+    public static String[] getProxyOverrideOrNull() {
+        try {
+            return getProxyOverride();
+        } catch (Win32Exception e) {
+            return null;
+        }
+    }
+
     public static String[] getProxyOverride() {
-        var value = Advapi32Util.registryGetStringValue(
+        var value = registryGetStringValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_OVERRIDE
@@ -119,7 +144,7 @@ public final class WindowsProxyHelper {
      * 设置绕过代理的 主机 列表
      */
     public static void setProxyOverride(String... list) {
-        Advapi32Util.registrySetStringValue(
+        registrySetStringValue(
                 HKEY_CURRENT_USER,
                 INTERNET_SETTINGS_KEY_PATH,
                 PROXY_OVERRIDE,
@@ -138,6 +163,10 @@ public final class WindowsProxyHelper {
         return new ProxyInfo(getProxyServer(), getProxyEnable(), getProxyOverride());
     }
 
+    public static ProxyInfo getProxyInfoOrNull() {
+        return new ProxyInfo(getProxyServerOrNull(), getProxyEnableOrNull(), getProxyOverrideOrNull());
+    }
+
     public static void setProxy(ProxyInfo proxyInfo) {
         if (proxyInfo.proxyServer != null) {
             setProxyServer(proxyInfo.proxyServer);
@@ -148,6 +177,11 @@ public final class WindowsProxyHelper {
         if (proxyInfo.proxyOverride != null) {
             setProxyOverride(proxyInfo.proxyOverride);
         }
+    }
+
+    public static boolean isWindows() {
+        var currentOS = System.getProperty("os.name");
+        return currentOS.startsWith("Windows");
     }
 
     public record ProxyInfo(String proxyServer, Boolean proxyEnable, String[] proxyOverride) {
