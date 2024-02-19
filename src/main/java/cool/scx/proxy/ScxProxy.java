@@ -10,19 +10,19 @@ import io.netty.handler.logging.LoggingHandler;
 
 public class ScxProxy {
 
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
-    private ServerBootstrap serverBootstrap;
-
     /**
      * 拦截器
      */
     ScxProxyInterceptor proxyInterceptor;
-
+    
     /**
      * 旧的代理状态 用于停机时恢复
      */
     WindowsProxyHelper.ProxyInfo oldProxyInfo;
+    
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
+    private ServerBootstrap serverBootstrap;
 
     public void setProxyInterceptor(ScxProxyInterceptor proxyInterceptor) {
         this.proxyInterceptor = proxyInterceptor;

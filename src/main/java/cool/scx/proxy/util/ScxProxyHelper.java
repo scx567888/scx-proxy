@@ -29,9 +29,9 @@ public class ScxProxyHelper {
     }
 
     public record HostAndPort(String host, int port) {
-        
+
         public InetSocketAddress toInetSocketAddress() {
-            return new InetSocketAddress(host,port);
+            return new InetSocketAddress(host, port);
         }
         
     }
