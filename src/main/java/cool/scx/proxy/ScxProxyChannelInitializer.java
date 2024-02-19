@@ -30,7 +30,7 @@ public class ScxProxyChannelInitializer extends ChannelInitializer<Channel> {
         channel.pipeline().addLast(HTTP_CONTENT_COMPRESSOR, new HttpContentCompressor());
 
         //将请求转发给远程服务器
-        channel.pipeline().addLast(SCX_HTTP_PROXY_HANDLER, new ScxHttpRequestProxyHandler(scxProxy));
+        channel.pipeline().addLast(SCX_HTTP_REQUEST_PROXY_HANDLER, new ScxHttpRequestProxyHandler(scxProxy));
         channel.pipeline().addLast(SCX_SOCKET_PROXY_HANDLER, new ScxSocketProxyHandler());
     }
 
