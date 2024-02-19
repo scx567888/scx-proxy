@@ -1,6 +1,6 @@
 package cool.scx.proxy.util;
 
-import io.netty.handler.codec.http.HttpRequest;
+import io.netty5.handler.codec.http.HttpRequest;
 
 import java.net.InetSocketAddress;
 
@@ -16,7 +16,7 @@ public class ScxProxyHelper {
     public static HostAndPort getHostAndPort(HttpRequest httpRequest) {
         var hostValue = httpRequest.headers().get("host");
 
-        var arr = hostValue.split(":");
+        var arr = hostValue.toString().split(":");
 
         var host = arr[0];
         var port = 80;

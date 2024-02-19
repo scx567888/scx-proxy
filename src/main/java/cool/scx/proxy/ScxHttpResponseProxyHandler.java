@@ -1,10 +1,10 @@
 package cool.scx.proxy;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty5.channel.ChannelHandler;
+import io.netty5.channel.ChannelHandlerContext;
+import io.netty5.handler.codec.http.FullHttpResponse;
 
-public class ScxHttpResponseProxyHandler extends ChannelInboundHandlerAdapter {
+public class ScxHttpResponseProxyHandler implements ChannelHandler {
 
     private final ScxProxy scxProxy;
     private final ChannelHandlerContext clientCtx;
@@ -22,8 +22,9 @@ public class ScxHttpResponseProxyHandler extends ChannelInboundHandlerAdapter {
                 httpResponse = scxProxy.proxyInterceptor.handleProxyResponse(httpResponse);
             }
             clientCtx.channel().writeAndFlush(httpResponse);
+        } else {
+            ChannelHandler.super.channelRead(ctx, msg);
         }
-        super.channelRead(ctx, msg);
     }
 
 }

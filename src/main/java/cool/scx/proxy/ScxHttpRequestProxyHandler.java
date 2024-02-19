@@ -1,17 +1,18 @@
 package cool.scx.proxy;
 
 import cool.scx.proxy.util.ScxProxyHelper;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.*;
+import io.netty5.bootstrap.Bootstrap;
+import io.netty5.buffer.Buffer;
+import io.netty5.channel.Channel;
+import io.netty5.channel.ChannelHandler;
+import io.netty5.channel.ChannelHandlerContext;
+import io.netty5.channel.ChannelInitializer;
+import io.netty5.channel.socket.nio.NioSocketChannel;
+import io.netty5.handler.codec.http.*;
 
 import static cool.scx.proxy.util.HandlerNames.*;
 
-public class ScxHttpRequestProxyHandler extends ChannelInboundHandlerAdapter {
+public class ScxHttpRequestProxyHandler implements ChannelHandler {
 
     private final ScxProxy scxProxy;
 
@@ -25,7 +26,7 @@ public class ScxHttpRequestProxyHandler extends ChannelInboundHandlerAdapter {
 
             //检查是否为 CONNECT 请求 用于 http
             if (httpRequest.method() == HttpMethod.CONNECT) {
-                var connectResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                var connectResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, ctx.bufferAllocator().allocate(0));
                 ctx.writeAndFlush(connectResponse);
                 return;
             }
@@ -35,20 +36,27 @@ public class ScxHttpRequestProxyHandler extends ChannelInboundHandlerAdapter {
                 httpRequest = scxProxy.proxyInterceptor.handleProxyRequest(httpRequest);
             }
 
-            //
-            var hostAndPort = ScxProxyHelper.getHostAndPort(httpRequest);
+            try {
+                //
+                var hostAndPort = ScxProxyHelper.getHostAndPort(httpRequest);
 
-            //转发请求
-            sendToServer(hostAndPort, ctx, httpRequest);
+                //转发请求
+                sendToServer(hostAndPort, ctx, httpRequest);
+            }catch (Exception e){
+             e.printStackTrace();   
+            }
+          
 
+        }else{
+            //处理不了就转发给下一个
+            ChannelHandler.super.channelRead(ctx, msg);    
         }
-        //处理不了就转发给下一个
-        super.channelRead(ctx, msg);
+        
     }
 
     public void sendToServer(ScxProxyHelper.HostAndPort remoteAddress, ChannelHandlerContext clientCtx, HttpRequest fullHttpRequest) {
         var bootstrap = new Bootstrap();
-        bootstrap.group(clientCtx.channel().eventLoop())
+        bootstrap.group(clientCtx.channel().executor())
                 .channelFactory(NioSocketChannel::new)
                 .handler(new ChannelInitializer<>() {
                     @Override
@@ -59,7 +67,7 @@ public class ScxHttpRequestProxyHandler extends ChannelInboundHandlerAdapter {
                         channel.pipeline().addLast(HTTP_RESPONSE_DECODER, new HttpResponseDecoder());
 
                         //聚合 Http 对象
-                        channel.pipeline().addLast(HTTP_OBJECT_AGGREGATOR, new HttpObjectAggregator(10 * 65535));
+                        channel.pipeline().addLast(HTTP_OBJECT_AGGREGATOR, new HttpObjectAggregator<>(10 * 65535));
 
                         //客户端 解压缩处理
                         channel.pipeline().addLast(HTTP_CONTENT_DECOMPRESSOR, new HttpContentDecompressor());
@@ -73,7 +81,8 @@ public class ScxHttpRequestProxyHandler extends ChannelInboundHandlerAdapter {
 
         connect.addListener(channelFuture -> {
             if (channelFuture.isSuccess()) {
-                connect.channel().writeAndFlush(fullHttpRequest);
+                Channel now = channelFuture.getNow();
+                now.writeAndFlush(fullHttpRequest);
             } else {
                 clientCtx.channel().close();
                 channelFuture.cause().printStackTrace();

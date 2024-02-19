@@ -1,11 +1,10 @@
-package cool.scx.proxy;
+package cool.scx.proxy.test;
 
 import cool.scx.logging.ScxLoggerFactory;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.http.impl.HttpUtils;
 import io.vertx.core.net.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

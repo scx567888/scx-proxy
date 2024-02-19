@@ -1,12 +1,14 @@
 package cool.scx.proxy;
 
 import cool.scx.proxy.util.WindowsProxyHelper;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
+import io.netty5.bootstrap.ServerBootstrap;
+import io.netty5.channel.EventLoopGroup;
+import io.netty5.channel.MultithreadEventLoopGroup;
+import io.netty5.channel.SingleThreadEventLoop;
+import io.netty5.channel.nio.NioHandler;
+import io.netty5.channel.socket.nio.NioServerSocketChannel;
+import io.netty5.handler.logging.LogLevel;
+import io.netty5.handler.logging.LoggingHandler;
 
 public class ScxProxy {
 
@@ -48,8 +50,8 @@ public class ScxProxy {
 
     protected void start(int port) {
 
-        this.bossGroup = new NioEventLoopGroup(1);
-        this.workerGroup = new NioEventLoopGroup();
+        this.bossGroup = new MultithreadEventLoopGroup(1,NioHandler.newFactory());
+        this.workerGroup = new MultithreadEventLoopGroup(NioHandler.newFactory());
 
         this.serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(bossGroup, workerGroup)

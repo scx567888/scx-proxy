@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button id="btn1">
+    点我
+</button>
+<script>
+    const btn1 = document.querySelector("#btn1");
+    btn1.onclick = () => {
+        fetch("http://localhost:8080/index.aaa", {
+            method: "POST",
+            headers: {
+                "a": 123,
+                b: "456"
+            },
+            body:JSON.stringify({
+                name:"小明"
+            })
+        }).then(c=>{
+            console.log(c)
+        }).catch(e=>{
+            console.error(e)
+        });
+    };
+</script>
+</body>
+</html>
