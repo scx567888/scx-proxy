@@ -113,7 +113,7 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <vertx-http-proxy.version>4.5.4</vertx-http-proxy.version>
+        <vertx-http-proxy.version>4.5.6</vertx-http-proxy.version>
         <scx.version>2.7.2</scx.version>
         <slf4j.version>2.0.12</slf4j.version>
         <testng.version>7.9.0</testng.version>
